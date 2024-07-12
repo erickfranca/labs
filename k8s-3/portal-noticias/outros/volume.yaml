@@ -1,0 +1,45 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+    name: slow
+provisioner: kubernetes.io/gce-pd
+parameters:
+    type: pd-standard
+    fstype: ext4
+    replication-type: none
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-1
+spec:
+  resources:
+    requests:
+      storage: 10Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: slow
+
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+ name: pod-volume
+ labels:
+  app: pod-volume
+spec:
+  containers:
+    - name: pod-volume-container1
+      image: nginx:latest
+      volumeMounts:
+        - mountPath: /primeiro-volume
+          name: primeiro-volume
+  volumes:
+    - name: primeiro-volume
+      PersistentVolumeClaim: 
+        claimName: pvc-1
+  
