@@ -19,6 +19,7 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: 16.
-
+    
+    - run: cd /home/runner/work/labs/allbooks-aula-01/package.json
     - run: npm install
     - run: npm test
